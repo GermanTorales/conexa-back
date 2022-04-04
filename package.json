@@ -6,7 +6,7 @@
   "author": "German Torales",
   "license": "MIT",
   "scripts": {
-    "start": " npm run build && node ./build/index.js",
+    "start": " npm run build && node ./build/www/www.js",
     "build": "npm run clean && npm run babel-build",
     "babel-build": "babel -d ./build ./src -s",
     "clean": "rm -rf ./build && mkdir build",
