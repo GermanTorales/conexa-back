@@ -3,7 +3,8 @@ import passport from 'passport';
 import httpStatus from 'http-status';
 import { jwtStrategy, config, logger } from '../config';
 import { successHandler as morganSuccessHandler, errorHandler as morganErrorHandler } from '../config/morgan.js';
-// import { RoutesV1 } from '../routes/index.js';
+import { RoutesV1 } from '../routes/index.js';
+import ApiError from '../utils/ApiError.js';
 
 export default class Api {
   async bootstrap(app) {
@@ -25,11 +26,27 @@ export default class Api {
     passport.use('jwt', jwtStrategy);
 
     // v1 api routes
-    // app.use('/api/v1', RoutesV1);
+    app.use('/api/v1', RoutesV1);
 
-    // send back a 404 error for any unknown api request
+    // 404 error handler
     app.use((req, res, next) => {
-      next(new Error({ status: httpStatus.NOT_FOUND, error: 'Not found' }));
+      const error = new Error('Not found');
+      error.status = httpStatus.NOT_FOUND;
+      error.statusCode = httpStatus.NOT_FOUND;
+
+      next(new ApiError(error.status, error.message, false, error.stack));
+    });
+
+    // error handler middleware
+    app.use((error, req, res, next) => {
+      logger.error(`Error occured: ${error?.message}`);
+
+      return res.status(error.status || error?.statusCode || httpStatus.INTERNAL_SERVER_ERROR).send({
+        error: {
+          status: error.status || error?.statusCode || httpStatus.INTERNAL_SERVER_ERROR,
+          message: error.message || 'Internal Server Error',
+        },
+      });
     });
   }
 }
