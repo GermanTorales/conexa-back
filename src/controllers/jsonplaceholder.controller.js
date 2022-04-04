@@ -4,12 +4,25 @@ import { JsonplaceholderService } from '../services';
 const handleGetPosts = async (req, res, next) => {
   try {
     const { page, size } = req.query;
-    const posts = await JsonplaceholderService.getPosts(page, size);
+    const data = await JsonplaceholderService.getPosts(page, size);
+    const prev = page ? page - 1 : null;
 
-    return res.status(httpStatus.OK).json({ length: posts.length, current: page, prev: page - 1, next: page + 1, posts });
+    return res.status(httpStatus.OK).json({ length: data.length, current: page, prev, next: page + 1, data });
   } catch (error) {
     next(error);
   }
 };
 
-export default { handleGetPosts };
+const handleGetPhotos = async (req, res, next) => {
+  try {
+    const { page, size } = req.query;
+    const data = await JsonplaceholderService.getPhotos(page, size);
+    const prev = page ? page - 1 : null;
+
+    return res.status(httpStatus.OK).json({ length: data.length, current: page, prev, next: page + 1, data });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default { handleGetPosts, handleGetPhotos };
