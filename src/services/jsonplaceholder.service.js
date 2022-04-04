@@ -7,4 +7,10 @@ const getPosts = async (page = 0, size = 10) => {
   return posts.data.slice(page * size, (page + 1) * size);
 };
 
-export default { getPosts };
+const getPhotos = async (page = 0, size = 10) => {
+  const photos = await axios.get(`${config.JsonplaceholderUrl}/photos`);
+
+  return photos.data.slice(page * size, (page + 1) * size);
+};
+
+export default { getPosts, getPhotos };
