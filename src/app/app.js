@@ -1,7 +1,7 @@
 import express from 'express';
-import passport from 'passport';
+import cors from 'cors';
 import httpStatus from 'http-status';
-import { jwtStrategy, config, logger } from '../config';
+import { config, logger } from '../config';
 import { successHandler as morganSuccessHandler, errorHandler as morganErrorHandler } from '../config/morgan.js';
 import { RoutesV1 } from '../routes/index.js';
 import ApiError from '../utils/ApiError.js';
@@ -21,9 +21,9 @@ export default class Api {
     // parse urlencoded request body
     app.use(express.urlencoded({ extended: true }));
 
-    // jwt authentication
-    app.use(passport.initialize());
-    passport.use('jwt', jwtStrategy);
+    // enable cors
+    app.use(cors());
+    app.options('*', cors());
 
     // v1 api routes
     app.use('/api/v1', RoutesV1);
