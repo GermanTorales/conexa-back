@@ -22,17 +22,8 @@ export default class Api {
     app.use(express.urlencoded({ extended: true }));
 
     // enable cors
-    app.use(
-      cors({
-        origin: ['http://localhost:3000', 'https://conexa-front-challenge.netlify.app/'],
-      })
-    );
-    app.options(
-      '*',
-      cors({
-        origin: ['http://localhost:3000', 'https://conexa-front-challenge.netlify.app/'],
-      })
-    );
+    app.use(cors());
+    app.options('*', cors());
 
     // v1 api routes
     app.use('/api/v1', RoutesV1);
