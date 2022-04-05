@@ -6,4 +6,9 @@ export const users = [
     email: 'german@test.com',
     password: 'Test1234',
   },
+  {
+    _id: uuidV4(),
+    email: 'conexa@test.com',
+    password: 'Test1234',
+  },
 ];

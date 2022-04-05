@@ -1,17 +1,18 @@
 import JWT from 'jsonwebtoken';
 import { validationResult } from 'express-validator';
 import logger from '../config/winston-config';
+import httpStatus from 'http-status';
 
 export const ValidateJWT = (req, res, next) => {
   const token = req.headers['x-access-token'] || req.headers.authorization;
 
-  if (!token) res.status(400).json({ status: false, message: 'Token required' });
+  if (!token) res.status(httpStatus.BAD_REQUEST).json({ status: false, message: 'Token required' });
 
   JWT.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
       logger.error(`JWT: ${err.message}`);
 
-      return res.status(401).json({ status: false, error: 'Token is not valid' });
+      return res.status(httpStatus.UNAUTHORIZED).json({ status: false, error: 'Token is not valid' });
     }
 
     req.decoded = decoded;
@@ -30,7 +31,7 @@ export const validate = (req, res, next) => {
 
   logger.warn(`Validation Error on: '${req.url}'`);
 
-  return res.status(422).json({
+  return res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
     status: false,
     message: 'Validation errors',
     info: extractedErrors,
