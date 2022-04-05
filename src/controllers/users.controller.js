@@ -10,7 +10,7 @@ const handleLogin = async (req, res, next) => {
 
     if (!token) throw new ApiError(httpStatus.BAD_REQUEST, 'Email or password is incorrect');
 
-    return res.status(200).json({ token });
+    return res.status(httpStatus.OK).json({ token });
   } catch (error) {
     next(error);
   }
